@@ -121,9 +121,6 @@
                                 </textFieldCell>
                             </textField>
                         </subviews>
-                        <connections>
-                            <outlet property="flagsLabel" destination="zrk-eX-oCU" id="Rp3-SN-SJj"/>
-                        </connections>
                     </view>
                     <connections>
                         <outlet property="flagsLbl" destination="zrk-eX-oCU" id="97G-D4-ah5"/>

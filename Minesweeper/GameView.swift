@@ -35,14 +35,16 @@ class GameView : NSView {
     var safe: Int = 0
     
     required init?(coder decoder: NSCoder) {
-        let nbTiles = nbHorizontalTiles * nbVerticalTiles
-        for i in 0..<nbTiles {
-            let y: Int = i / nbHorizontalTiles
-            let x: Int = i - y * nbHorizontalTiles
+        super.init(coder: decoder)
+        for i in 0..<nbTiles() {
+            let (x, y) = coordFromIdx(idx: i)
             let t = Tile(x: x, y: y)
             tiles.append(t)
         }
-        super.init(coder: decoder)
+    }
+    
+    func nbTiles() -> Int {
+        return nbHorizontalTiles * nbVerticalTiles
     }
     
     func reset() {
@@ -51,8 +53,7 @@ class GameView : NSView {
         flags = 0
         flagsLbL.stringValue = "Flags: 0/50"
         timerLbl.stringValue = "Time: 0"
-        let nbTiles = nbHorizontalTiles * nbVerticalTiles;
-        for i in 0..<nbTiles {
+        for i in 0..<nbTiles() {
             data[i] = false
             tiles[i].state = .Empty
         }
@@ -71,8 +72,7 @@ class GameView : NSView {
         dirtyRect.fill()
         
         if let ctx = NSGraphicsContext.current?.cgContext {
-            let nbTiles = nbHorizontalTiles * nbVerticalTiles
-            for i in 0...nbTiles-1 {
+            for i in 0...nbTiles()-1 {
                 tiles[i].render(ctx: ctx)
             }
             
@@ -87,7 +87,13 @@ class GameView : NSView {
         let x = idx - y * nbHorizontalTiles
         return (x, y)
     }
-    
+
+    func coordFromPoint(point: NSPoint) -> (Int, Int) {
+        let x = Int(floor(point.x / 40))
+        let y = Int(floor((point.y - 20) / 40))
+        return (x, y)
+    }
+
     func neighborIdx(idx: Int) -> [Int] {
         let (x, y) = coordFromIdx(idx: idx)
         let neighbors = neighborCoord(x: x, y: y)
@@ -110,7 +116,7 @@ class GameView : NSView {
         var val: Int = 0
         for _ in 0..<nbMines {
             while true {
-                val = Int(arc4random_uniform(UInt32(nbHorizontalTiles * nbVerticalTiles)))
+                val = Int(arc4random_uniform(UInt32(nbTiles())))
                 if !around(idx: val, x: x, y: y) {
                     break
                 }
@@ -154,9 +160,9 @@ class GameView : NSView {
         ctx.saveGState()
         ctx.setFillColor(CGColor(red: 1, green: 1, blue: 1, alpha: 0.7))
         ctx.move(to: CGPoint(x: 0, y: 0))
-        ctx.addLine(to: CGPoint(x: tileSize * 19, y: 0))
-        ctx.addLine(to: CGPoint(x: tileSize * 19, y: tileSize * 13))
-        ctx.addLine(to: CGPoint(x: 0, y: tileSize * 13))
+        ctx.addLine(to: CGPoint(x: tileSize * nbHorizontalTiles, y: 0))
+        ctx.addLine(to: CGPoint(x: tileSize * nbHorizontalTiles, y: tileSize * nbVerticalTiles))
+        ctx.addLine(to: CGPoint(x: 0, y: tileSize * nbVerticalTiles))
         ctx.addLine(to: CGPoint(x: 0, y: 0))
         ctx.fillPath()
         ctx.restoreGState()
@@ -182,13 +188,9 @@ class GameView : NSView {
         var res: [(Int, Int)] = []
         for dx in -1...1 {
             for dy in -1...1 {
-                if dx == 0 && dy == 0 {
-                    continue
+                if (dx != 0 || dy != 0) && isValidPosition(x: x + dx, y: y + dy) {
+                    res.append((x + dx, y + dy))
                 }
-                if !isValidPosition(x: x + dx, y: y + dy) {
-                    continue
-                }
-                res.append((x + dx, y + dy))
             }
         }
         return res
@@ -251,8 +253,7 @@ class GameView : NSView {
         
         super.mouseUp(with: event)
         
-        let tileX = Int(floor(event.locationInWindow.x / 40))
-        let tileY = Int(floor((event.locationInWindow.y - 20) / 40))
+        let (tileX, tileY) = coordFromPoint(point: event.locationInWindow)
         let tileIdx = idxFromCoordinate(x: tileX, y: tileY)
         let tile = tiles[tileIdx]
         if state == State.Waiting {
@@ -300,8 +301,7 @@ class GameView : NSView {
     
     override func rightMouseUp(with event: NSEvent) {
         super.rightMouseUp(with: event)
-        let tileX = Int(floor(event.locationInWindow.x / 40))
-        let tileY = Int(floor((event.locationInWindow.y - 20) / 40))
+        let (tileX, tileY) = coordFromPoint(point: event.locationInWindow)
         if state == State.Playing {
             toggleFlag(x: tileX, y: tileY)
         }
