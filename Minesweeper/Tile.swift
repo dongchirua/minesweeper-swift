@@ -31,7 +31,7 @@ class Tile {
         self.y = y
     }
     
-    func renderEmpty(ctx: CGContext) {
+    func renderEmpty(_ ctx: CGContext) {
         let sizef = CGFloat(size)
         ctx.saveGState()
         ctx.translateBy(x: CGFloat(x * size), y: CGFloat(y * size))
@@ -47,7 +47,7 @@ class Tile {
         ctx.restoreGState()
     }
     
-    func renderFlag(ctx: CGContext) {
+    func renderFlag(_ ctx: CGContext) {
         let sizef = CGFloat(size)
         ctx.saveGState()
         
@@ -72,7 +72,7 @@ class Tile {
         ctx.restoreGState()
     }
     
-    func renderExplodedMine(ctx: CGContext) {
+    func renderExplodedMine(_ ctx: CGContext) {
         let sizef = CGFloat(size)
         ctx.saveGState()
         ctx.translateBy(x: CGFloat(x * size), y: CGFloat(y * size))
@@ -83,7 +83,7 @@ class Tile {
         ctx.restoreGState()
     }
     
-    func renderMine(ctx: CGContext) {
+    func renderMine(_ ctx: CGContext) {
         let sizef = CGFloat(size)
         ctx.saveGState()
         ctx.translateBy(x: CGFloat(x * size), y: CGFloat(y * size))
@@ -94,7 +94,7 @@ class Tile {
         ctx.restoreGState()
     }
     
-    func renderCross(ctx: CGContext) {
+    func renderCross(_ ctx: CGContext) {
         let sizef = CGFloat(size)
         ctx.saveGState()
         ctx.translateBy(x: CGFloat(x * size), y: CGFloat(y * size))
@@ -108,7 +108,7 @@ class Tile {
         ctx.restoreGState()
     }
     
-    func renderDiscovered(ctx: CGContext) {
+    func renderDiscovered(_ ctx: CGContext) {
         let sizef = CGFloat(size)
         ctx.saveGState()
         ctx.translateBy(x: CGFloat(x * size), y: CGFloat(y * size))
@@ -153,26 +153,26 @@ class Tile {
     func render(ctx: CGContext) {
         switch state {
         case .Empty:
-            renderEmpty(ctx: ctx)
+            renderEmpty(ctx)
         case .Flagged:
-            renderEmpty(ctx: ctx)
-            renderFlag(ctx: ctx)
+            renderEmpty(ctx)
+            renderFlag(ctx)
         case .Discovered:
-            renderDiscovered(ctx: ctx)
+            renderDiscovered(ctx)
         case .ExplodedMine:
-            renderEmpty(ctx: ctx)
-            renderExplodedMine(ctx: ctx)
+            renderEmpty(ctx)
+            renderExplodedMine(ctx)
         case .BadFlag:
-            renderEmpty(ctx: ctx)
-            renderFlag(ctx: ctx)
-            renderCross(ctx: ctx)
+            renderEmpty(ctx)
+            renderFlag(ctx)
+            renderCross(ctx)
         case .Mine:
-            renderEmpty(ctx: ctx)
-            renderMine(ctx: ctx)
+            renderEmpty(ctx)
+            renderMine(ctx)
         case .FlaggedMine:
-            renderEmpty(ctx: ctx)
-            renderMine(ctx: ctx)
-            renderFlag(ctx: ctx)
+            renderEmpty(ctx)
+            renderMine(ctx)
+            renderFlag(ctx)
         }
     }
 }
