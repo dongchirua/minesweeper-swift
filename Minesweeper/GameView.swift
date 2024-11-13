@@ -92,8 +92,8 @@ class GameView : NSView {
     }
 
     func coordFromPoint(point: NSPoint) -> (Int, Int) {
-        let x = Int(floor(point.x / 40))
-        let y = Int(floor((point.y - 20) / 40))
+        let x = Int(floor(point.x / CGFloat(tileSize)))
+        let y = Int(floor((point.y - 20) / CGFloat(tileSize)))
         return (x, y)
     }
 
