@@ -216,28 +216,29 @@ class GameView : NSView {
         return nbFlags
     }
     
-    func showTile(x: Int, y: Int) {
+    func showTile(x: Int, y: Int) -> Int {
         let tileIdx = idxFromCoordinate(x: x, y: y)
         let tile = tiles[tileIdx]
         
         if tile.state == .Discovered || tile.state == .Flagged || tile.state == .BadFlag || tile.state == .FlaggedMine {
-            return
+            return 0
         }
         if isMine(idx: tileIdx) {
             gameOver(idx: tileIdx)
-            return
+            return 0
         }
         
         let nbMinesAround = countMinesAround(x: x, y: y)
-        safe += 1
+        var safe = 1
         tile.minesAround = nbMinesAround
         tile.state = .Discovered
         
         if nbMinesAround == 0 {
             for (nx, ny) in neighborCoord(x: x, y: y) {
-                showTile(x: nx, y: ny)
+                safe += showTile(x: nx, y: ny)
             }
         }
+        return safe
     }
     
     @objc func updateTimer() {
@@ -268,7 +269,7 @@ class GameView : NSView {
                 tilesToShow.append(contentsOf: neighborCoord(x: tileX, y: tileY))
             }
             for el in tilesToShow {
-                showTile(x: el.0, y: el.1)
+                safe += showTile(x: el.0, y: el.1)
             }
             if safe == tiles.count - nbMines {
                 state = .Win
