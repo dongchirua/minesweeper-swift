@@ -71,20 +71,6 @@ class GameView : NSView {
         return y * nbHorizontalTiles + x
     }
     
-    override func draw(_ dirtyRect: NSRect) {
-        super.draw(dirtyRect);
-        NSColor.white.setFill()
-        dirtyRect.fill()
-        if let ctx = NSGraphicsContext.current?.cgContext {
-            for i in 0...nbTiles()-1 {
-                tiles[i].render(ctx: ctx)
-            }
-            if state == .Win {
-                win(ctx: ctx)
-            }
-        }
-    }
-    
     func coordFromIdx(_ idx: Int) -> (Int, Int) {
         let y = idx / nbHorizontalTiles
         let x = idx - y * nbHorizontalTiles
@@ -241,9 +227,36 @@ class GameView : NSView {
         return safe
     }
     
+    func toggleFlag(x: Int, y: Int) {
+        let tileIdx = idxFromCoordinate(x, y)
+        let tile = tiles[tileIdx]
+        if tile.state == .Empty {
+            tile.state = .Flagged
+            flags += 1
+        } else if tile.state == .Flagged {
+            tile.state = .Empty
+            flags -= 1
+        }
+        flagsLbL.stringValue = String(format: "Flags: %d/50", flags)
+    }
+    
     @objc func updateTimer() {
         seconds += 1
         timerLbl.stringValue = String(format: "Time: %d", seconds)
+    }
+    
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect);
+        NSColor.white.setFill()
+        dirtyRect.fill()
+        if let ctx = NSGraphicsContext.current?.cgContext {
+            for i in 0...nbTiles()-1 {
+                tiles[i].render(ctx: ctx)
+            }
+            if state == .Win {
+                win(ctx: ctx)
+            }
+        }
     }
     
     override func mouseUp(with event: NSEvent) {
@@ -284,19 +297,6 @@ class GameView : NSView {
         }
         
         self.setNeedsDisplay(NSRect(x: 0, y: 0, width: horizontalSize(), height: verticalSize()))
-    }
-    
-    func toggleFlag(x: Int, y: Int) {
-        let tileIdx = idxFromCoordinate(x, y)
-        let tile = tiles[tileIdx]
-        if tile.state == .Empty {
-            tile.state = .Flagged
-            flags += 1
-        } else if tile.state == .Flagged {
-            tile.state = .Empty
-            flags -= 1
-        }
-        flagsLbL.stringValue = String(format: "Flags: %d/50", flags)
     }
     
     override func rightMouseUp(with event: NSEvent) {
