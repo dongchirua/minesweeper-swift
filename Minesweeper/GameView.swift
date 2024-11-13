@@ -43,6 +43,14 @@ class GameView : NSView {
         }
     }
     
+    func horizontalSize() -> Int {
+        return nbHorizontalTiles * tileSize
+    }
+    
+    func verticalSize() -> Int {
+        return nbVerticalTiles * tileSize
+    }
+    
     func nbTiles() -> Int {
         return nbHorizontalTiles * nbVerticalTiles
     }
@@ -153,9 +161,9 @@ class GameView : NSView {
         ctx.saveGState()
         ctx.setFillColor(CGColor(red: 1, green: 1, blue: 1, alpha: 0.7))
         ctx.move(to: CGPoint(x: 0, y: 0))
-        ctx.addLine(to: CGPoint(x: tileSize * nbHorizontalTiles, y: 0))
-        ctx.addLine(to: CGPoint(x: tileSize * nbHorizontalTiles, y: tileSize * nbVerticalTiles))
-        ctx.addLine(to: CGPoint(x: 0, y: tileSize * nbVerticalTiles))
+        ctx.addLine(to: CGPoint(x: horizontalSize(), y: 0))
+        ctx.addLine(to: CGPoint(x: horizontalSize(), y: verticalSize()))
+        ctx.addLine(to: CGPoint(x: 0, y: verticalSize()))
         ctx.addLine(to: CGPoint(x: 0, y: 0))
         ctx.fillPath()
         ctx.restoreGState()
@@ -169,7 +177,7 @@ class GameView : NSView {
             NSAttributedString.Key.paragraphStyle: paragraphStyle,
             NSAttributedString.Key.foregroundColor: NSColor(calibratedRed: 0, green: 0.502, blue: 0, alpha: 1),
             ]
-        label.draw(with: CGRect(x: 0, y: ((tileSize*nbVerticalTiles) + 40) / 2, width: tileSize*nbHorizontalTiles, height: 40), options: .usesLineFragmentOrigin, attributes: attrs, context: nil)
+        label.draw(with: CGRect(x: 0, y: ((verticalSize()) + 40) / 2, width: horizontalSize(), height: 40), options: .usesLineFragmentOrigin, attributes: attrs, context: nil)
     }
     
     func isValidPosition(x: Int, y: Int) -> Bool {
@@ -278,7 +286,7 @@ class GameView : NSView {
             timer.invalidate()
         }
         
-        self.setNeedsDisplay(NSRect(x: 0, y: 0, width: 760, height: 520))
+        self.setNeedsDisplay(NSRect(x: 0, y: 0, width: horizontalSize(), height: verticalSize()))
     }
     
     func toggleFlag(x: Int, y: Int) {
@@ -300,6 +308,6 @@ class GameView : NSView {
         if state == .Playing {
             toggleFlag(x: tileX, y: tileY)
         }
-        self.setNeedsDisplay(NSRect(x: 0, y: 0, width: 760, height: 520))
+        self.setNeedsDisplay(NSRect(x: 0, y: 0, width: horizontalSize(), height: verticalSize()))
     }
 }
