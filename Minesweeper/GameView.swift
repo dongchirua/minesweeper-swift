@@ -65,17 +65,12 @@ class GameView : NSView {
     
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect);
-        
         NSColor.white.setFill()
-        //let rect = NSRect(bounds)
-        //let rect = NSRect(x: 0, y: 0, width: 100, height: 100)
         dirtyRect.fill()
-        
         if let ctx = NSGraphicsContext.current?.cgContext {
             for i in 0...nbTiles()-1 {
                 tiles[i].render(ctx: ctx)
             }
-            
             if state == .Win {
                 win(ctx: ctx)
             }
