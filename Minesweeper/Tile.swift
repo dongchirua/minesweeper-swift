@@ -127,7 +127,7 @@ class Tile {
             return
         }
         
-        let colors: [NSColor] = [
+        let colors = [
             NSColor(calibratedRed: 0, green: 0, blue: 1, alpha: 1),         // Blue
             NSColor(calibratedRed: 0, green: 0.502, blue: 0, alpha: 1),     // Green
             NSColor(calibratedRed: 1, green: 0, blue: 0, alpha: 1),         // Red
