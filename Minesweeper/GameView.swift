@@ -264,10 +264,8 @@ class GameView : NSView {
         
         if state == .Playing {
             var tilesToShow = [(tileX, tileY)]
-            if tile.state == .Discovered {
-                if countFlagsAround(x: tileX, y: tileY) == countMinesAround(x: tileX, y: tileY) {
-                    tilesToShow.append(contentsOf: neighborCoord(x: tileX, y: tileY))
-                }
+            if tile.state == .Discovered && countFlagsAround(x: tileX, y: tileY) == countMinesAround(x: tileX, y: tileY) {
+                tilesToShow.append(contentsOf: neighborCoord(x: tileX, y: tileY))
             }
             for el in tilesToShow {
                 showTile(x: el.0, y: el.1)
