@@ -255,14 +255,16 @@ class GameView : NSView {
         }
         
         if state == .Playing {
+            var tilesToShow = [(tileX, tileY)]
             if tile.state == .Discovered {
                 if countFlagsAround(x: tileX, y: tileY) == countMinesAround(x: tileX, y: tileY) {
                     for (nx, ny) in neighborCoord(x: tileX, y: tileY) {
-                        showTile(x: nx, y: ny)
+                        tilesToShow.append((nx, ny))
                     }
                 }
-            } else {
-                showTile(x: tileX, y: tileY)
+            }
+            for el in tilesToShow {
+                showTile(x: el.0, y: el.1)
             }
             if safe == tiles.count - nbMines {
                 state = .Win
