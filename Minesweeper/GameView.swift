@@ -38,7 +38,7 @@ class GameView : NSView {
         super.init(coder: decoder)
         for i in 0..<nbTiles() {
             let (x, y) = coordFromIdx(i)
-            let t = Tile(x: x, y: y)
+            let t = Tile(x: x, y: y, size: tileSize)
             tiles.append(t)
         }
     }

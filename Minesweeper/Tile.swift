@@ -20,15 +20,16 @@ class Tile {
         case FlaggedMine
     }
     
-    let size = 40
+    let size: Int
     var x: Int
     var y: Int
     var state = State.Empty
     var minesAround = 0
     
-    init(x: Int, y: Int) {
+    init(x: Int, y: Int, size: Int) {
         self.x = x
         self.y = y
+        self.size = size
     }
     
     func renderEmpty(_ ctx: CGContext) {
