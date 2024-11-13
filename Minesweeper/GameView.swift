@@ -126,7 +126,6 @@ class GameView : NSView {
             }
             data[val] = true
         }
-        state = State.Playing
     }
     
     func isMine(idx: Int) -> Bool {
@@ -260,6 +259,7 @@ class GameView : NSView {
         if state == State.Waiting {
             initBoard(x: tileX, y: tileY)
             timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(self.updateTimer)), userInfo: nil, repeats: true)
+            state = .Playing
         }
         
         if state == .Playing {
