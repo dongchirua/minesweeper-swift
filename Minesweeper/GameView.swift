@@ -37,7 +37,7 @@ class GameView : NSView {
     required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
         for i in 0..<nbTiles() {
-            let (x, y) = coordFromIdx(idx: i)
+            let (x, y) = coordFromIdx(i)
             let t = Tile(x: x, y: y)
             tiles.append(t)
         }
@@ -67,7 +67,7 @@ class GameView : NSView {
         }
     }
     
-    func idxFromCoordinate(x: Int, y: Int) -> Int {
+    func idxFromCoordinate(_ x: Int, _ y: Int) -> Int {
         return y * nbHorizontalTiles + x
     }
     
@@ -85,38 +85,38 @@ class GameView : NSView {
         }
     }
     
-    func coordFromIdx(idx: Int) -> (Int, Int) {
+    func coordFromIdx(_ idx: Int) -> (Int, Int) {
         let y = idx / nbHorizontalTiles
         let x = idx - y * nbHorizontalTiles
         return (x, y)
     }
 
-    func coordFromPoint(point: NSPoint) -> (Int, Int) {
+    func coordFromPoint(_ point: NSPoint) -> (Int, Int) {
         let x = Int(floor(point.x / CGFloat(tileSize)))
         let y = Int(floor((point.y - 20) / CGFloat(tileSize)))
         return (x, y)
     }
 
-    func neighborIdx(idx: Int) -> [Int] {
-        let (x, y) = coordFromIdx(idx: idx)
+    func neighborIdx(_ idx: Int) -> [Int] {
+        let (x, y) = coordFromIdx(idx)
         let neighbors = neighborCoord(x: x, y: y)
         var res: [Int] = []
         for (nx, ny) in neighbors {
-            res.append(idxFromCoordinate(x: nx, y: ny))
+            res.append(idxFromCoordinate(nx, ny))
         }
         return res
     }
     
     func around(idx: Int, x: Int, y: Int) -> Bool {
-        let initialClickPosition = idxFromCoordinate(x: x, y: y)
-        let neighborsIndexes = neighborIdx(idx: initialClickPosition)
+        let initialClickPosition = idxFromCoordinate(x, y)
+        let neighborsIndexes = neighborIdx(initialClickPosition)
         return neighborsIndexes.firstIndex(of: idx) != nil ||
                idx == initialClickPosition ||
                isMine(idx: idx)
     }
     
     func initBoard(x: Int, y: Int) {
-        var val: Int = 0
+        var val = 0
         for _ in 0..<nbMines {
             while true {
                 val = Int(arc4random_uniform(UInt32(nbTiles())))
@@ -199,7 +199,7 @@ class GameView : NSView {
     func countMinesAround(x: Int, y: Int) -> Int {
         var nbMines = 0
         for (nx, ny) in neighborCoord(x: x, y: y) {
-            if isMine(idx: idxFromCoordinate(x: nx, y: ny)) {
+            if isMine(idx: idxFromCoordinate(nx, ny)) {
                 nbMines += 1
             }
         }
@@ -209,7 +209,7 @@ class GameView : NSView {
     func countFlagsAround(x: Int, y: Int) -> Int {
         var nbFlags = 0
         for (nx, ny) in neighborCoord(x: x, y: y) {
-            if isFlag(idx: idxFromCoordinate(x: nx, y: ny)) {
+            if isFlag(idx: idxFromCoordinate(nx, ny)) {
                 nbFlags += 1
             }
         }
@@ -217,7 +217,7 @@ class GameView : NSView {
     }
     
     func showTile(x: Int, y: Int) -> Int {
-        let tileIdx = idxFromCoordinate(x: x, y: y)
+        let tileIdx = idxFromCoordinate(x, y)
         let tile = tiles[tileIdx]
         
         if tile.state == .Discovered || tile.state == .Flagged || tile.state == .BadFlag || tile.state == .FlaggedMine {
@@ -254,8 +254,8 @@ class GameView : NSView {
         
         super.mouseUp(with: event)
         
-        let (tileX, tileY) = coordFromPoint(point: event.locationInWindow)
-        let tileIdx = idxFromCoordinate(x: tileX, y: tileY)
+        let (tileX, tileY) = coordFromPoint(event.locationInWindow)
+        let tileIdx = idxFromCoordinate(tileX, tileY)
         let tile = tiles[tileIdx]
         if state == State.Waiting {
             initBoard(x: tileX, y: tileY)
@@ -287,7 +287,7 @@ class GameView : NSView {
     }
     
     func toggleFlag(x: Int, y: Int) {
-        let tileIdx = idxFromCoordinate(x: x, y: y)
+        let tileIdx = idxFromCoordinate(x, y)
         let tile = tiles[tileIdx]
         if tile.state == .Empty {
             tile.state = .Flagged
@@ -301,7 +301,7 @@ class GameView : NSView {
     
     override func rightMouseUp(with event: NSEvent) {
         super.rightMouseUp(with: event)
-        let (tileX, tileY) = coordFromPoint(point: event.locationInWindow)
+        let (tileX, tileY) = coordFromPoint(event.locationInWindow)
         if state == .Playing {
             toggleFlag(x: tileX, y: tileY)
         }
