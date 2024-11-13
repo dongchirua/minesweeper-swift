@@ -136,16 +136,14 @@ class GameView : NSView {
     
     func showMines(deadIdx: Int) {
         for i in 0..<tiles.count {
-            if isMine(idx: i) || isFlag(idx: i) {
-                if i == deadIdx {
-                    tiles[i].state = .ExplodedMine
-                } else if isMine(idx: i) && isFlag(idx: i) {
-                    tiles[i].state = .FlaggedMine
-                } else if isFlag(idx: i) {
-                    tiles[i].state = .BadFlag
-                } else {
-                    tiles[i].state = .Mine
-                }
+            if i == deadIdx {
+                tiles[i].state = .ExplodedMine
+            } else if isMine(idx: i) && isFlag(idx: i) {
+                tiles[i].state = .FlaggedMine
+            } else if isFlag(idx: i) {
+                tiles[i].state = .BadFlag
+            } else if isMine(idx: i) {
+                tiles[i].state = .Mine
             }
         }
     }
@@ -261,7 +259,7 @@ class GameView : NSView {
             timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(self.updateTimer)), userInfo: nil, repeats: true)
         }
         
-        if state == State.Playing {
+        if state == .Playing {
             if tile.state == .Discovered {
                 if countFlagsAround(x: tileX, y: tileY) == countMinesAround(x: tileX, y: tileY) {
                     for (nx, ny) in neighborCoord(x: tileX, y: tileY) {
@@ -302,7 +300,7 @@ class GameView : NSView {
     override func rightMouseUp(with event: NSEvent) {
         super.rightMouseUp(with: event)
         let (tileX, tileY) = coordFromPoint(point: event.locationInWindow)
-        if state == State.Playing {
+        if state == .Playing {
             toggleFlag(x: tileX, y: tileY)
         }
         self.setNeedsDisplay(NSRect(x: 0, y: 0, width: 760, height: 520))
