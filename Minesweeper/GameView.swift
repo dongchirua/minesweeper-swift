@@ -220,6 +220,9 @@ class GameView : NSView {
     }
     
     override func mouseUp(with event: NSEvent) {
+        if !bounds.contains(event.locationInWindow) {
+            return
+        }
         if event.modifierFlags.contains(.command) {
             rightMouseUp(with: event)
             return
@@ -260,6 +263,9 @@ class GameView : NSView {
     }
     
     override func rightMouseUp(with event: NSEvent) {
+        if !bounds.contains(event.locationInWindow) {
+            return
+        }
         super.rightMouseUp(with: event)
         let (tileX, tileY) = coordFromPoint(event.locationInWindow)
         if state == .Playing {
