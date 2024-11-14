@@ -200,25 +200,23 @@ class GameView : NSView {
         let tileIdx = idxFromCoordinate(x, y)
         let tile = tiles[tileIdx]
         
-        if tile.state == .Discovered || tile.state == .Flagged || tile.state == .BadFlag || tile.state == .FlaggedMine {
-            return 0
-        }
+        guard tile.state == .Empty else { return 0 }
+
         if isMine(tileIdx) {
             gameOver(idx: tileIdx)
             return 0
         }
         
         let nbMinesAround = countMinesAround(x: x, y: y)
-        var safe = 1
-        tile.minesAround = nbMinesAround
-        tile.state = .Discovered
+        tile.discover(nbMinesAround)
         
-        if nbMinesAround == 0 {
-            for (nx, ny) in neighborCoord(x: x, y: y) {
-                safe += showTile(x: nx, y: ny)
-            }
+        if nbMinesAround > 0 {
+            return 1
         }
-        return safe
+        
+        return neighborCoord(x: x, y: y).reduce(1) { acc, neighbor in
+            acc + showTile(x: neighbor.0, y: neighbor.1)
+        }
     }
     
     func toggleFlag(x: Int, y: Int) {

@@ -32,6 +32,11 @@ class Tile {
         self.size = size
     }
     
+    func discover(_ nbMinesAround: Int) {
+        minesAround = nbMinesAround
+        state = .Discovered
+    }
+    
     func tileDrawWrapper(_ ctx: CGContext, _ clb: () -> Void) {
         ctx.saveGState()
         ctx.translateBy(x: CGFloat(x * size), y: CGFloat(y * size))
