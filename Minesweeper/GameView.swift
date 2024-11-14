@@ -256,7 +256,7 @@ class GameView : NSView {
             timer.invalidate()
         }
         
-        setNeedsDisplay(NSRect(x: 0, y: 0, width: horizontalSize(), height: verticalSize()))
+        redraw()
     }
     
     override func rightMouseUp(with event: NSEvent) {
@@ -265,6 +265,10 @@ class GameView : NSView {
         if state == .Playing {
             toggleFlag(x: tileX, y: tileY)
         }
+        redraw()
+    }
+    
+    func redraw() {
         setNeedsDisplay(NSRect(x: 0, y: 0, width: horizontalSize(), height: verticalSize()))
     }
 }
