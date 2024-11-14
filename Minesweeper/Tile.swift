@@ -101,7 +101,6 @@ class Tile {
             ctx.move(to: CGPoint(x: sizef/5, y: sizef-sizef/5))
             ctx.addLine(to: CGPoint(x: sizef-sizef/5, y: sizef/5))
             ctx.strokePath()
-            ctx.restoreGState()
         })
     }
     
