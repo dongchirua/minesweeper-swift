@@ -51,16 +51,13 @@ class Tile {
     func renderFlag(_ ctx: CGContext) {
         let sizef = CGFloat(size)
         ctx.saveGState()
-        
         ctx.translateBy(x: CGFloat(x * size), y: CGFloat(y * size))
-        
         // Red flag
         ctx.setFillColor(CGColor(red: 1, green: 0, blue: 0, alpha: 1))
         ctx.move(to: CGPoint(x: sizef/3.0, y: sizef/2.0))
         ctx.addLine(to: CGPoint(x: sizef/3.0*2, y: sizef/3.0))
         ctx.addLine(to: CGPoint(x: sizef/3.0*2, y: sizef/3.0*2))
         ctx.fillPath()
-        
         // Black pole
         ctx.setLineWidth(2)
         ctx.setStrokeColor(CGColor(red: 0, green: 0, blue: 0, alpha: 1))
@@ -69,27 +66,17 @@ class Tile {
         ctx.addLine(to: CGPoint(x: sizef/2.0, y: sizef/4.0))
         ctx.addLine(to: CGPoint(x: sizef-sizef/5.0, y: sizef/4.0))
         ctx.strokePath()
-        
         ctx.restoreGState()
     }
     
-    func renderExplodedMine(_ ctx: CGContext) {
+    func renderMine(_ ctx: CGContext, exploded: Bool) {
+        let normalColor = CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
+        let explodedColor = CGColor(red: 0.8, green: 0, blue: 0, alpha: 1)
         let sizef = CGFloat(size)
         ctx.saveGState()
         ctx.translateBy(x: CGFloat(x * size), y: CGFloat(y * size))
         ctx.setStrokeColor(CGColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1))
-        ctx.setFillColor(CGColor(red: 0.8, green: 0, blue: 0, alpha: 1))
-        ctx.addArc(center: CGPoint(x: sizef/2, y: sizef/2), radius: sizef/4, startAngle: 0, endAngle: CGFloat(2 * Double.pi), clockwise: true)
-        ctx.drawPath(using: .fillStroke)
-        ctx.restoreGState()
-    }
-    
-    func renderMine(_ ctx: CGContext) {
-        let sizef = CGFloat(size)
-        ctx.saveGState()
-        ctx.translateBy(x: CGFloat(x * size), y: CGFloat(y * size))
-        ctx.setStrokeColor(CGColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1))
-        ctx.setFillColor(CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1))
+        ctx.setFillColor(exploded ? explodedColor : normalColor)
         ctx.addArc(center: CGPoint(x: sizef/2, y: sizef/2), radius: sizef/4, startAngle: 0, endAngle: CGFloat(2 * Double.pi), clockwise: true)
         ctx.drawPath(using: .fillStroke)
         ctx.restoreGState()
@@ -162,17 +149,17 @@ class Tile {
             renderDiscovered(ctx)
         case .ExplodedMine:
             renderEmpty(ctx)
-            renderExplodedMine(ctx)
+            renderMine(ctx, exploded: true)
         case .BadFlag:
             renderEmpty(ctx)
             renderFlag(ctx)
             renderCross(ctx)
         case .Mine:
             renderEmpty(ctx)
-            renderMine(ctx)
+            renderMine(ctx, exploded: false)
         case .FlaggedMine:
             renderEmpty(ctx)
-            renderMine(ctx)
+            renderMine(ctx, exploded: false)
             renderFlag(ctx)
         }
     }
