@@ -130,14 +130,12 @@ class Tile {
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
-        let label = String(minesAround)
-        let font = NSFont(name: "Arial", size: 38)!
-        let attrs = [
-            NSAttributedString.Key.font: font,
-            NSAttributedString.Key.paragraphStyle: paragraphStyle,
-            NSAttributedString.Key.foregroundColor: colors[minesAround-1],
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: NSFont(name: "Arial", size: 38)!,
+            .paragraphStyle: paragraphStyle,
+            .foregroundColor: colors[minesAround-1],
         ]
-        label.draw(with: CGRect(x: x*size, y: y*size, width: size, height: size), options: .usesLineFragmentOrigin, attributes: attrs, context: nil)
+        String(minesAround).draw(with: CGRect(x: x*size, y: y*size, width: size, height: size), options: .usesLineFragmentOrigin, attributes: attrs, context: nil)
     }
     
     func render(ctx: CGContext) {
