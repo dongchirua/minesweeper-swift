@@ -27,12 +27,10 @@ class GameView : NSView {
     let nbHorizontalTiles = 19
     let nbVerticalTiles = 13
     var state = State.Waiting
-    var data: [Bool]
     var tiles: [Tile] = []
     var safe: Int = 0
     
     required init?(coder decoder: NSCoder) {
-        data = Array(repeating: false, count: nbHorizontalTiles * nbVerticalTiles)
         super.init(coder: decoder)
         tiles = (0..<nbTiles()).map { idx in
             let (x, y) = coordFromIdx(idx)
@@ -55,8 +53,10 @@ class GameView : NSView {
         flags = 0
         flagsLbL.stringValue = "Flags: 0/50"
         timerLbl.stringValue = "Time: 0"
-        data = Array(repeating: false, count: nbTiles())
-        tiles.forEach { $0.state = .Empty }
+        tiles.forEach { tile in
+            tile.state = .Empty
+            tile.isMine = false
+        }
     }
 
     func coordFromPoint(_ point: NSPoint) -> (Int, Int) {
@@ -85,16 +85,16 @@ class GameView : NSView {
             repeat {
                 position = Int(arc4random_uniform(UInt32(nbTiles())))
             } while around(idx: position, x: x, y: y)
-            data[position] = true
+            tiles[position].isMine = true
         }
     }
     
     func isMine(_ idx: Int) -> Bool {
-        return data[idx]
+        tiles[idx].isMine
     }
     
     func isFlag(_ idx: Int) -> Bool {
-        return tiles[idx].state == .Flagged
+        tiles[idx].state == .Flagged
     }
     
     func showMines(deadIdx: Int) {

@@ -24,6 +24,7 @@ class Tile {
     var x: Int
     var y: Int
     var state = State.Empty
+    var isMine = false
     var minesAround = 0
     
     init(x: Int, y: Int, size: Int) {
