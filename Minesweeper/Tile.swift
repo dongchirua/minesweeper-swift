@@ -14,6 +14,16 @@ class Tile {
         case Empty, Discovered, Flagged, BadFlag, ExplodedMine, Mine, FlaggedMine
     }
     
+    enum TileColor {
+        static let empty = CGColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
+        static let flagged = CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+        static let mineStroke = CGColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
+        static let mineNormal = CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
+        static let mineExploded = CGColor(red: 0.8, green: 0, blue: 0, alpha: 1)
+        static let discovered = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
+        static let stroke = CGColor(red: 0.502, green: 0.502, blue: 0.502, alpha: 1)
+    }
+    
     let size: Int
     var x: Int
     var y: Int
@@ -43,8 +53,8 @@ class Tile {
         tileDrawWrapper(ctx, {
             let sizef = CGFloat(size)
             ctx.setLineWidth(1)
-            ctx.setFillColor(CGColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1))
-            ctx.setStrokeColor(CGColor(red: 0.502, green: 0.502, blue: 0.502, alpha: 1))
+            ctx.setFillColor(TileColor.empty)
+            ctx.setStrokeColor(TileColor.stroke)
             ctx.move(to: CGPoint(x: 0, y: 0))
             ctx.addLine(to: CGPoint(x: sizef, y: 0))
             ctx.addLine(to: CGPoint(x: sizef, y: sizef))
@@ -58,14 +68,14 @@ class Tile {
         tileDrawWrapper(ctx, {
             let sizef = CGFloat(size)
             // Red flag
-            ctx.setFillColor(CGColor(red: 1, green: 0, blue: 0, alpha: 1))
+            ctx.setFillColor(TileColor.flagged)
             ctx.move(to: CGPoint(x: sizef/3.0, y: sizef/2.0))
             ctx.addLine(to: CGPoint(x: sizef/3.0*2, y: sizef/3.0))
             ctx.addLine(to: CGPoint(x: sizef/3.0*2, y: sizef/3.0*2))
             ctx.fillPath()
             // Black pole
             ctx.setLineWidth(2)
-            ctx.setStrokeColor(CGColor(red: 0, green: 0, blue: 0, alpha: 1))
+            ctx.setStrokeColor(CGColor.black)
             ctx.move(to: CGPoint(x: sizef/3.0*2, y: sizef-sizef/3.0))
             ctx.addLine(to: CGPoint(x: sizef/3.0*2, y: sizef/4.0))
             ctx.addLine(to: CGPoint(x: sizef/2.0, y: sizef/4.0))
@@ -76,10 +86,10 @@ class Tile {
     
     func renderMine(_ ctx: CGContext, exploded: Bool) {
         tileDrawWrapper(ctx, {
-            let normalColor = CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
-            let explodedColor = CGColor(red: 0.8, green: 0, blue: 0, alpha: 1)
+            let normalColor = TileColor.mineNormal
+            let explodedColor = TileColor.mineExploded
             let sizef = CGFloat(size)
-            ctx.setStrokeColor(CGColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1))
+            ctx.setStrokeColor(TileColor.mineStroke)
             ctx.setFillColor(exploded ? explodedColor : normalColor)
             ctx.addArc(center: CGPoint(x: sizef/2, y: sizef/2), radius: sizef/4, startAngle: 0, endAngle: CGFloat(2 * Double.pi), clockwise: true)
             ctx.drawPath(using: .fillStroke)
@@ -89,7 +99,7 @@ class Tile {
     func renderCross(_ ctx: CGContext) {
         tileDrawWrapper(ctx, {
             let sizef = CGFloat(size)
-            ctx.setStrokeColor(CGColor(red: 0, green: 0, blue: 0, alpha: 1))
+            ctx.setStrokeColor(CGColor.black)
             ctx.setLineWidth(2)
             ctx.move(to: CGPoint(x: sizef/5, y: sizef/5))
             ctx.addLine(to: CGPoint(x: sizef-sizef/5, y: sizef-sizef/5))
@@ -103,8 +113,8 @@ class Tile {
         tileDrawWrapper(ctx, {
             let sizef = CGFloat(size)
             ctx.setLineWidth(1)
-            ctx.setFillColor(CGColor(red: 1, green: 1, blue: 1, alpha: 1))
-            ctx.setStrokeColor(CGColor(red: 0.502, green: 0.502, blue: 0.502, alpha: 1))
+            ctx.setFillColor(TileColor.discovered)
+            ctx.setStrokeColor(TileColor.stroke)
             ctx.move(to: CGPoint(x: 0, y: 0))
             ctx.addLine(to: CGPoint(x: sizef, y: 0))
             ctx.addLine(to: CGPoint(x: sizef, y: sizef))
