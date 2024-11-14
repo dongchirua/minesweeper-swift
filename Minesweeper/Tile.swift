@@ -55,11 +55,11 @@ class Tile {
             ctx.setLineWidth(1)
             ctx.setFillColor(TileColor.empty)
             ctx.setStrokeColor(TileColor.stroke)
-            ctx.move(to: CGPoint(x: 0, y: 0))
+            ctx.move   (to: CGPoint(x: 0,     y: 0))
             ctx.addLine(to: CGPoint(x: sizef, y: 0))
             ctx.addLine(to: CGPoint(x: sizef, y: sizef))
-            ctx.addLine(to: CGPoint(x: 0, y: sizef))
-            ctx.addLine(to: CGPoint(x: 0, y: 0))
+            ctx.addLine(to: CGPoint(x: 0,     y: sizef))
+            ctx.addLine(to: CGPoint(x: 0,     y: 0))
             ctx.drawPath(using: .fillStroke)
         })
     }
@@ -69,16 +69,16 @@ class Tile {
             let sizef = CGFloat(size)
             // Red flag
             ctx.setFillColor(TileColor.flagged)
-            ctx.move(to: CGPoint(x: sizef/3.0, y: sizef/2.0))
+            ctx.move   (to: CGPoint(x: sizef/3.0,   y: sizef/2.0))
             ctx.addLine(to: CGPoint(x: sizef/3.0*2, y: sizef/3.0))
             ctx.addLine(to: CGPoint(x: sizef/3.0*2, y: sizef/3.0*2))
             ctx.fillPath()
             // Black pole
             ctx.setLineWidth(2)
             ctx.setStrokeColor(CGColor.black)
-            ctx.move(to: CGPoint(x: sizef/3.0*2, y: sizef-sizef/3.0))
-            ctx.addLine(to: CGPoint(x: sizef/3.0*2, y: sizef/4.0))
-            ctx.addLine(to: CGPoint(x: sizef/2.0, y: sizef/4.0))
+            ctx.move   (to: CGPoint(x: sizef/3.0*2,     y: sizef-sizef/3.0))
+            ctx.addLine(to: CGPoint(x: sizef/3.0*2,     y: sizef/4.0))
+            ctx.addLine(to: CGPoint(x: sizef/2.0,       y: sizef/4.0))
             ctx.addLine(to: CGPoint(x: sizef-sizef/5.0, y: sizef/4.0))
             ctx.strokePath()
         })
@@ -101,9 +101,9 @@ class Tile {
             let sizef = CGFloat(size)
             ctx.setStrokeColor(CGColor.black)
             ctx.setLineWidth(2)
-            ctx.move(to: CGPoint(x: sizef/5, y: sizef/5))
+            ctx.move   (to: CGPoint(x: sizef/5,       y: sizef/5))
             ctx.addLine(to: CGPoint(x: sizef-sizef/5, y: sizef-sizef/5))
-            ctx.move(to: CGPoint(x: sizef/5, y: sizef-sizef/5))
+            ctx.move   (to: CGPoint(x: sizef/5,       y: sizef-sizef/5))
             ctx.addLine(to: CGPoint(x: sizef-sizef/5, y: sizef/5))
             ctx.strokePath()
         })
@@ -115,11 +115,11 @@ class Tile {
             ctx.setLineWidth(1)
             ctx.setFillColor(TileColor.discovered)
             ctx.setStrokeColor(TileColor.stroke)
-            ctx.move(to: CGPoint(x: 0, y: 0))
+            ctx.move   (to: CGPoint(x: 0,     y: 0))
             ctx.addLine(to: CGPoint(x: sizef, y: 0))
             ctx.addLine(to: CGPoint(x: sizef, y: sizef))
-            ctx.addLine(to: CGPoint(x: 0, y: sizef))
-            ctx.addLine(to: CGPoint(x: 0, y: 0))
+            ctx.addLine(to: CGPoint(x: 0,     y: sizef))
+            ctx.addLine(to: CGPoint(x: 0,     y: 0))
             ctx.drawPath(using: .fillStroke)
         })
         
@@ -128,14 +128,14 @@ class Tile {
         }
         
         let colors = [
-            NSColor(calibratedRed: 0, green: 0, blue: 1, alpha: 1),         // Blue
-            NSColor(calibratedRed: 0, green: 0.502, blue: 0, alpha: 1),     // Green
-            NSColor(calibratedRed: 1, green: 0, blue: 0, alpha: 1),         // Red
-            NSColor(calibratedRed: 0, green: 0, blue: 0.502, alpha: 1),     // Navy
-            NSColor(calibratedRed: 0.502, green: 0, blue: 0, alpha: 1),     // Maroon
-            NSColor(calibratedRed: 0, green: 1, blue: 1, alpha: 1),         // Aqua
-            NSColor(calibratedRed: 0.502, green: 0, blue: 0.502, alpha: 1), // Purple
-            NSColor(calibratedRed: 0, green: 0, blue: 0, alpha: 1),         // Black
+            NSColor(calibratedRed: 0,     green: 0,     blue: 1,     alpha: 1), // Blue
+            NSColor(calibratedRed: 0,     green: 0.502, blue: 0,     alpha: 1), // Green
+            NSColor(calibratedRed: 1,     green: 0,     blue: 0,     alpha: 1), // Red
+            NSColor(calibratedRed: 0,     green: 0,     blue: 0.502, alpha: 1), // Navy
+            NSColor(calibratedRed: 0.502, green: 0,     blue: 0,     alpha: 1), // Maroon
+            NSColor(calibratedRed: 0,     green: 1,     blue: 1,     alpha: 1), // Aqua
+            NSColor(calibratedRed: 0.502, green: 0,     blue: 0.502, alpha: 1), // Purple
+            NSColor(calibratedRed: 0,     green: 0,     blue: 0,     alpha: 1), // Black
         ]
         
         let paragraphStyle = NSMutableParagraphStyle()
