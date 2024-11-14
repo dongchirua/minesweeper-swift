@@ -85,12 +85,7 @@ class GameView : NSView {
 
     func neighborIdx(_ idx: Int) -> [Int] {
         let (x, y) = coordFromIdx(idx)
-        let neighbors = neighborCoord(x: x, y: y)
-        var res: [Int] = []
-        for (nx, ny) in neighbors {
-            res.append(idxFromCoordinate(nx, ny))
-        }
-        return res
+        return neighborCoord(x: x, y: y).map { (nx, ny) in idxFromCoordinate(nx, ny) }
     }
     
     func around(idx: Int, x: Int, y: Int) -> Bool {
