@@ -98,15 +98,12 @@ class GameView : NSView {
     }
     
     func initBoard(x: Int, y: Int) {
-        var val = 0
         for _ in 0..<nbMines {
-            while true {
-                val = Int(arc4random_uniform(UInt32(nbTiles())))
-                if !around(idx: val, x: x, y: y) {
-                    break
-                }
-            }
-            data[val] = true
+            var position: Int
+            repeat {
+                position = Int(arc4random_uniform(UInt32(nbTiles())))
+            } while around(idx: position, x: x, y: y)
+            data[position] = true
         }
     }
     
