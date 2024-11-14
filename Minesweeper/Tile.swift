@@ -11,13 +11,7 @@ import AppKit
 
 class Tile {
     enum State {
-        case Empty
-        case Discovered
-        case Flagged
-        case BadFlag
-        case ExplodedMine
-        case Mine
-        case FlaggedMine
+        case Empty, Discovered, Flagged, BadFlag, ExplodedMine, Mine, FlaggedMine
     }
     
     let size: Int
