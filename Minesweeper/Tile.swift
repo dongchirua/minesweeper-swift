@@ -15,13 +15,13 @@ class Tile {
     }
     
     enum TileColor {
-        static let empty = CGColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
-        static let flagged = CGColor(red: 1, green: 0, blue: 0, alpha: 1)
-        static let mineStroke = CGColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
-        static let mineNormal = CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
-        static let mineExploded = CGColor(red: 0.8, green: 0, blue: 0, alpha: 1)
-        static let discovered = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
-        static let stroke = CGColor(red: 0.502, green: 0.502, blue: 0.502, alpha: 1)
+        static let empty        = CGColor(red: 0.8,   green: 0.8,   blue: 0.8,   alpha: 1)
+        static let flagged      = CGColor(red: 1,     green: 0,     blue: 0,     alpha: 1)
+        static let mineStroke   = CGColor(red: 0.2,   green: 0.2,   blue: 0.2,   alpha: 1)
+        static let mineNormal   = CGColor(red: 0.4,   green: 0.4,   blue: 0.4,   alpha: 1)
+        static let mineExploded = CGColor(red: 0.8,   green: 0,     blue: 0,     alpha: 1)
+        static let discovered   = CGColor(red: 1,     green: 1,     blue: 1,     alpha: 1)
+        static let stroke       = CGColor(red: 0.502, green: 0.502, blue: 0.502, alpha: 1)
     }
     
     let size: Int
