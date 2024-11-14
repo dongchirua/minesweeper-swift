@@ -30,11 +30,12 @@ class GameView : NSView {
     let nbHorizontalTiles = 19
     let nbVerticalTiles = 13
     var state = State.Waiting
-    var data: [Bool] = Array(repeating: false, count: 19*13)
+    var data: [Bool]
     var tiles: [Tile] = []
     var safe: Int = 0
     
     required init?(coder decoder: NSCoder) {
+        data = Array(repeating: false, count: nbHorizontalTiles * nbVerticalTiles)
         super.init(coder: decoder)
         for i in 0..<nbTiles() {
             let (x, y) = coordFromIdx(i)
