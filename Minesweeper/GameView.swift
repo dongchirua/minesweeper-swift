@@ -13,14 +13,11 @@ import AppKit
 class GameView : NSView {
     
     enum State {
-        case Waiting
-        case GameOver
-        case Win
-        case Playing
+        case Waiting, GameOver, Win, Playing
     }
     
-    var flagsLbL: NSTextField = NSTextField()
-    var timerLbl: NSTextField = NSTextField()
+    var flagsLbL = NSTextField()
+    var timerLbl = NSTextField()
     
     var timer = Timer()
     var seconds = 0
@@ -37,45 +34,29 @@ class GameView : NSView {
     required init?(coder decoder: NSCoder) {
         data = Array(repeating: false, count: nbHorizontalTiles * nbVerticalTiles)
         super.init(coder: decoder)
-        for i in 0..<nbTiles() {
-            let (x, y) = coordFromIdx(i)
-            let t = Tile(x: x, y: y, size: tileSize)
-            tiles.append(t)
+        tiles = (0..<nbTiles()).map { idx in
+            let (x, y) = coordFromIdx(idx)
+            return Tile(x: x, y: y, size: tileSize)
         }
     }
     
-    func horizontalSize() -> Int {
-        return nbHorizontalTiles * tileSize
+    func horizontalSize() -> Int { return nbHorizontalTiles * tileSize }
+    func verticalSize() -> Int { return nbVerticalTiles * tileSize }
+    func nbTiles() -> Int { return nbHorizontalTiles * nbVerticalTiles }
+    func idxFromCoordinate(_ x: Int, _ y: Int) -> Int { y * nbHorizontalTiles + x }
+
+    func coordFromIdx(_ idx: Int) -> (Int, Int) {
+        (idx % nbHorizontalTiles, idx / nbHorizontalTiles)
     }
-    
-    func verticalSize() -> Int {
-        return nbVerticalTiles * tileSize
-    }
-    
-    func nbTiles() -> Int {
-        return nbHorizontalTiles * nbVerticalTiles
-    }
-    
+
     func reset() {
         seconds = 0
         safe = 0
         flags = 0
         flagsLbL.stringValue = "Flags: 0/50"
         timerLbl.stringValue = "Time: 0"
-        for i in 0..<nbTiles() {
-            data[i] = false
-            tiles[i].state = .Empty
-        }
-    }
-    
-    func idxFromCoordinate(_ x: Int, _ y: Int) -> Int {
-        return y * nbHorizontalTiles + x
-    }
-    
-    func coordFromIdx(_ idx: Int) -> (Int, Int) {
-        let y = idx / nbHorizontalTiles
-        let x = idx - y * nbHorizontalTiles
-        return (x, y)
+        data = Array(repeating: false, count: nbTiles())
+        tiles.forEach { $0.state = .Empty }
     }
 
     func coordFromPoint(_ point: NSPoint) -> (Int, Int) {
@@ -131,7 +112,7 @@ class GameView : NSView {
     }
     
     func gameOver(idx: Int) {
-        state = State.GameOver
+        state = .GameOver
         showMines(deadIdx: idx);
     }
     
@@ -139,24 +120,17 @@ class GameView : NSView {
         showMines(deadIdx: -1)
         ctx.saveGState()
         ctx.setFillColor(CGColor(red: 1, green: 1, blue: 1, alpha: 0.7))
-        ctx.move(to: CGPoint(x: 0, y: 0))
-        ctx.addLine(to: CGPoint(x: horizontalSize(), y: 0))
-        ctx.addLine(to: CGPoint(x: horizontalSize(), y: verticalSize()))
-        ctx.addLine(to: CGPoint(x: 0, y: verticalSize()))
-        ctx.addLine(to: CGPoint(x: 0, y: 0))
-        ctx.fillPath()
+        ctx.fill(CGRect(x: 0, y: 0, width: horizontalSize(), height: verticalSize()))
         ctx.restoreGState()
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
-        let label = "Win"
-        let font = NSFont(name: "Arial", size: 40)!
-        let attrs = [
-            NSAttributedString.Key.font: font,
-            NSAttributedString.Key.paragraphStyle: paragraphStyle,
-            NSAttributedString.Key.foregroundColor: NSColor(calibratedRed: 0, green: 0.502, blue: 0, alpha: 1),
-            ]
-        label.draw(with: CGRect(x: 0, y: ((verticalSize()) + 40) / 2, width: horizontalSize(), height: 40), options: .usesLineFragmentOrigin, attributes: attrs, context: nil)
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: NSFont(name: "Arial", size: 40)!,
+            .paragraphStyle: paragraphStyle,
+            .foregroundColor: NSColor(calibratedRed: 0, green: 0.502, blue: 0, alpha: 1),
+        ]
+        "Win".draw(with: CGRect(x: 0, y: ((verticalSize()) + 40) / 2, width: horizontalSize(), height: 40), options: .usesLineFragmentOrigin, attributes: attrs, context: nil)
     }
     
     func isValidPosition(x: Int, y: Int) -> Bool {
@@ -177,23 +151,17 @@ class GameView : NSView {
     }
     
     func countMinesAround(x: Int, y: Int) -> Int {
-        var nbMines = 0
-        for (nx, ny) in neighborCoord(x: x, y: y) {
-            if isMine(idxFromCoordinate(nx, ny)) {
-                nbMines += 1
-            }
-        }
-        return nbMines
+        countAround(x, y, isMine)
     }
     
     func countFlagsAround(x: Int, y: Int) -> Int {
-        var nbFlags = 0
-        for (nx, ny) in neighborCoord(x: x, y: y) {
-            if isFlag(idxFromCoordinate(nx, ny)) {
-                nbFlags += 1
-            }
+        countAround(x, y, isFlag)
+    }
+    
+    func countAround(_ x: Int, _ y: Int, _ clb: (Int) -> Bool) -> Int {
+        neighborCoord(x: x, y: y).reduce(0) { acc, coord in
+            acc + (clb(idxFromCoordinate(coord.0, coord.1)) ? 1 : 0)
         }
-        return nbFlags
     }
     
     func showTile(x: Int, y: Int) -> Int {
