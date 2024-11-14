@@ -88,10 +88,11 @@ class GameView : NSView {
         return neighborCoord(x: x, y: y).map { (nx, ny) in idxFromCoordinate(nx, ny) }
     }
     
+    // Return true if `idx` is `(x,y)` or a neighbor of it
     func around(idx: Int, x: Int, y: Int) -> Bool {
         let initialClickPosition = idxFromCoordinate(x, y)
         let neighborsIndexes = neighborIdx(initialClickPosition)
-        return neighborsIndexes.firstIndex(of: idx) != nil ||
+        return neighborsIndexes.contains(idx) ||
                idx == initialClickPosition ||
                isMine(idx)
     }
