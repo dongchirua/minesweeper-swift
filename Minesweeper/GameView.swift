@@ -252,7 +252,7 @@ class GameView : NSView {
     }
     
     override func mouseUp(with event: NSEvent) {
-        if (event.modifierFlags.contains(.command)) {
+        if event.modifierFlags.contains(.command) {
             rightMouseUp(with: event)
             return
         }
@@ -262,9 +262,9 @@ class GameView : NSView {
         let (tileX, tileY) = coordFromPoint(event.locationInWindow)
         let tileIdx = idxFromCoordinate(tileX, tileY)
         let tile = tiles[tileIdx]
-        if state == State.Waiting {
+        if state == .Waiting {
             initBoard(x: tileX, y: tileY)
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(self.updateTimer)), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
             state = .Playing
         }
         
@@ -273,8 +273,8 @@ class GameView : NSView {
             if tile.state == .Discovered && countFlagsAround(x: tileX, y: tileY) == countMinesAround(x: tileX, y: tileY) {
                 tilesToShow.append(contentsOf: neighborCoord(x: tileX, y: tileY))
             }
-            for el in tilesToShow {
-                safe += showTile(x: el.0, y: el.1)
+            for (x, y) in tilesToShow {
+                safe += showTile(x: x, y: y)
             }
             if safe == tiles.count - nbMines {
                 state = .Win
@@ -288,7 +288,7 @@ class GameView : NSView {
             timer.invalidate()
         }
         
-        self.setNeedsDisplay(NSRect(x: 0, y: 0, width: horizontalSize(), height: verticalSize()))
+        setNeedsDisplay(NSRect(x: 0, y: 0, width: horizontalSize(), height: verticalSize()))
     }
     
     override func rightMouseUp(with event: NSEvent) {
@@ -297,6 +297,6 @@ class GameView : NSView {
         if state == .Playing {
             toggleFlag(x: tileX, y: tileY)
         }
-        self.setNeedsDisplay(NSRect(x: 0, y: 0, width: horizontalSize(), height: verticalSize()))
+        setNeedsDisplay(NSRect(x: 0, y: 0, width: horizontalSize(), height: verticalSize()))
     }
 }
