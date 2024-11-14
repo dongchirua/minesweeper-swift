@@ -98,7 +98,7 @@ class GameView : NSView {
         let neighborsIndexes = neighborIdx(initialClickPosition)
         return neighborsIndexes.firstIndex(of: idx) != nil ||
                idx == initialClickPosition ||
-               isMine(idx: idx)
+               isMine(idx)
     }
     
     func initBoard(x: Int, y: Int) {
@@ -114,11 +114,11 @@ class GameView : NSView {
         }
     }
     
-    func isMine(idx: Int) -> Bool {
+    func isMine(_ idx: Int) -> Bool {
         return data[idx]
     }
     
-    func isFlag(idx: Int) -> Bool {
+    func isFlag(_ idx: Int) -> Bool {
         return tiles[idx].state == .Flagged
     }
     
@@ -126,11 +126,11 @@ class GameView : NSView {
         for i in 0..<tiles.count {
             if i == deadIdx {
                 tiles[i].state = .ExplodedMine
-            } else if isMine(idx: i) && isFlag(idx: i) {
+            } else if isMine(i) && isFlag(i) {
                 tiles[i].state = .FlaggedMine
-            } else if isFlag(idx: i) {
+            } else if isFlag(i) {
                 tiles[i].state = .BadFlag
-            } else if isMine(idx: i) {
+            } else if isMine(i) {
                 tiles[i].state = .Mine
             }
         }
@@ -185,7 +185,7 @@ class GameView : NSView {
     func countMinesAround(x: Int, y: Int) -> Int {
         var nbMines = 0
         for (nx, ny) in neighborCoord(x: x, y: y) {
-            if isMine(idx: idxFromCoordinate(nx, ny)) {
+            if isMine(idxFromCoordinate(nx, ny)) {
                 nbMines += 1
             }
         }
@@ -195,7 +195,7 @@ class GameView : NSView {
     func countFlagsAround(x: Int, y: Int) -> Int {
         var nbFlags = 0
         for (nx, ny) in neighborCoord(x: x, y: y) {
-            if isFlag(idx: idxFromCoordinate(nx, ny)) {
+            if isFlag(idxFromCoordinate(nx, ny)) {
                 nbFlags += 1
             }
         }
@@ -209,7 +209,7 @@ class GameView : NSView {
         if tile.state == .Discovered || tile.state == .Flagged || tile.state == .BadFlag || tile.state == .FlaggedMine {
             return 0
         }
-        if isMine(idx: tileIdx) {
+        if isMine(tileIdx) {
             gameOver(idx: tileIdx)
             return 0
         }
